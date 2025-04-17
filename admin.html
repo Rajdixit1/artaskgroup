@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stock Admin Panel</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+    #profile {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: #34495e;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+    }
+    #profile img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    main {
+      padding: 20px;
+    }
+    h2 {
+      margin-top: 40px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #34495e;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    .form-container {
+      margin-top: 20px;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 500px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 15px;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #219150;
+    }
+    .delete-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .delete-btn:hover {
+      background: #c0392b;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Stock Management Admin Panel</h1>
+  <div id="profile">
+    <img id="profilePic" src="https://via.placeholder.com/50" alt="Profile Picture" />
+    <div>
+      <span><strong>id:</strong> 1234567890</span><br>
+      <span><strong>Name:</strong> John Doe</span><br>
+      <label for="file-upload" style="color: white; cursor: pointer; font-size: 12px;">Change Profile Picture</label>
+      <input type="file" id="file-upload" style="display: none;" accept="image/*" onchange="previewImage(event)" />
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section>
+    <h2>Current Stock</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Item Name</th>
+          <th>Category</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="stockTable">
+        <!-- Dynamic stock items will appear here -->
+      </tbody>
+    </table>
+  </section>
+
+  <section class="form-container">
+    <h2>Add New Stock</h2>
+    <form id="addStockForm">
+      <label>Item Name</label>
+      <input type="text" id="itemName" placeholder="Enter item name" required />
+      
+      <label>Category</label>
+      <input type="text" id="category" placeholder="Enter category" required />
+      
+      <label>Quantity</label>
+      <input type="number" id="quantity" placeholder="Enter quantity" required />
+      
+      <label>Price</label>
+      <input type="number" id="price" placeholder="Enter price" required />
+      
+      <button type="submit">Add Stock</button>
+    </form>
+  </section>
+
+</main>
+
+<script>
+  // Get references to the form and table body
+  const addStockForm = document.getElementById("addStockForm");
+  const stockTable = document.getElementById("stockTable");
+
+  // Function to add stock item to the table
+  function addStockItem(itemName, category, quantity, price) {
+    const newRow = document.createElement("tr");
+
+    newRow.innerHTML = `
+      <td>${itemName}</td>
+      <td>${category}</td>
+      <td>${quantity}</td>
+      <td>$${price}</td>
+      <td><button class="delete-btn" onclick="deleteStockItem(this)">Delete</button></td>
+    `;
+
+    stockTable.appendChild(newRow);
+  }
+
+  // Function to handle form submission
+  addStockForm.addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    // Get values from the form inputs
+    const itemName = document.getElementById("itemName").value;
+    const category = document.getElementById("category").value;
+    const quantity = document.getElementById("quantity").value;
+    const price = document.getElementById("price").value;
+
+    // Add the new stock item to the table
+    addStockItem(itemName, category, quantity, price);
+
+    // Reset the form
+    addStockForm.reset();
+  });
+
+  // Function to delete a stock item
+  function deleteStockItem(button) {
+    const row = button.closest("tr");
+    stockTable.removeChild(row);
+  }
+
+  // Function to preview the selected profile image
+  function previewImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const profilePic = document.getElementById("profilePic");
+        profilePic.src = e.target.result;
+      }
+      reader.readAsDataURL(file);
+    }
+  }
+</script>
+
+</body>
+</html>
